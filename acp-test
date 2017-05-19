@@ -1,0 +1,8 @@
+#!/bin/bash
+ACP=x,y,z
+for cp in ${ACP//,/ }; do  echo == $cp; echo " " ; done
+
+export HADOOP_PREFIX=/usr/local/hadoop
+export ZOO_HOME=/usr/local/zookeeper
+export HBASE_HOME=/usr/local/hbase
+

@@ -1,0 +1,4 @@
+
+docker build -t docker-phoenix-master .
+
+docker run -it docker-phoenix-master /etc/bootstrap-phoenix.sh -sqlline
