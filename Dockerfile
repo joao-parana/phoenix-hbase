@@ -80,8 +80,14 @@ ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
 RUN chown root:root /etc/bootstrap-phoenix.sh
 RUN chmod 700 /etc/bootstrap-phoenix.sh
 
+RUN yum install -y python-argparse.noarch
+
 # TODO: Atualizar pra Java 8
 ENV JAVA_HOME /usr/java/jdk1.7.0_71
+RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
+    echo "# O HBase não lê do ambiente global. Temos de setar aqui o JAVA_HOME" >> /usr/local/hbase/conf/hbase-env.sh && \
+    echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
+    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> /usr/local/hbase/conf/hbase-env.sh
 
 RUN rm -rf /tmp/*
 
