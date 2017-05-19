@@ -74,12 +74,16 @@ Refer to [Zookeeper](http://hbase.apache.org/book.html#zookeeper)
 #### Try with another image
 
 ```
+cd legacy
+docker build -t parana/docker-phoenix-master .
 docker save -o docker-phoenix-master.tar  parana/docker-phoenix-master:latest
 scp -P 49133 docker-phoenix-master.tar  parana@my-remote-host:~/
 # On my-remote-host I need to do:
 docker load -i docker-phoenix-master.tar  -q
 docker images
+docker run -it parana/docker-phoenix-master /etc/bootstrap-phoenix.sh -sqlline
 ```
+
 
 #### Testing
 
@@ -90,24 +94,20 @@ CREATE TABLE IF NOT EXISTS us_population (
       population BIGINT
       CONSTRAINT my_pk PRIMARY KEY (state, city));
 
-UPSERT into us_population (state, city, population) values ('CA','Los Angeles',3844829);
 UPSERT into us_population (state, city, population) values ('NY','New York',8143197);
+UPSERT into us_population (state, city, population) values ('CA','Los Angeles',3844829);
+UPSERT into us_population (state, city, population) values ('IL','Chicago',2842518);
+UPSERT into us_population (state, city, population) values ('TX','Houston',2016582);
+UPSERT into us_population (state, city, population) values ('PA','Philadelphia',1463281);
+UPSERT into us_population (state, city, population) values ('AZ','Phoenix',1461575);
+UPSERT into us_population (state, city, population) values ('TX','San Antonio',1256509);
+UPSERT into us_population (state, city, population) values ('CA','San Diego',1255540);
+UPSERT into us_population (state, city, population) values ('TX','Dallas',1213825);
+UPSERT into us_population (state, city, population) values ('CA','San Jose',912332);
 
-SELECT state as "State",count(city) as "City Count",sum(population) as "Population Sum"
-FROM us_population
+  SELECT state, count(city) as "city count", sum(population) as "population sum"
+    FROM us_population
 GROUP BY state
 ORDER BY sum(population) DESC;
-
-
-
-NY,New York,8143197
-CA,Los Angeles,3844829
-IL,Chicago,2842518
-TX,Houston,2016582
-PA,Philadelphia,1463281
-AZ,Phoenix,1461575
-TX,San Antonio,1256509
-CA,San Diego,1255540
-TX,Dallas,1213825
-CA,San Jose,912332
 ```
+

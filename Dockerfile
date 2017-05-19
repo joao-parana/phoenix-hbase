@@ -87,12 +87,13 @@ ENV JAVA_HOME /usr/java/jdk1.7.0_71
 RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
     echo "# O HBase não lê do ambiente global. Temos de setar aqui o JAVA_HOME" >> /usr/local/hbase/conf/hbase-env.sh && \
     echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "# HBase pode rodar sem seu proprio ZooKeeper" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "export HBASE_MANAGES_ZK=false" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "" >> /usr/local/hbase/conf/hbase-env.sh
+    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> /usr/local/hbase/conf/hbase-env.sh
 
+# O comando abaixo deveria retirar o erro de binding na porta do ZooKeeper
+# RUN echo "# HBase pode rodar sem seu proprio ZooKeeper" >> /usr/local/hbase/conf/hbase-env.sh && \
+#     echo "export HBASE_MANAGES_ZK=false" >> /usr/local/hbase/conf/hbase-env.sh && \
+#     echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
+#     echo "" >> /usr/local/hbase/conf/hbase-env.sh
 
 RUN rm -rf /tmp/*
 
