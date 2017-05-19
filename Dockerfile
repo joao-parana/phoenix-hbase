@@ -1,26 +1,49 @@
-#FROM sequenceiq/hadoop-docker:2.7.3
+FROM sequenceiq/hadoop-docker:2.7.1
+# TODO: Atualizar pra Java 8, usando Ubuntu 16.04  da imagem parana/hadoop
+# FROM parana/hadoop
 
-FROM postgres:9.6.2
+MAINTAINER joao.parana@gmail.com
 
-MAINTAINER João Paraná
+# Baseado na Imagem da sequenceiq. Troquei de CentOS para Ubuntu 16.04 e troquei a versão do Java.
 
-RUN apt-get update && apt-get install -y curl wget 
+# Copiando os binários para evitar sucessivos downloads
+COPY install /tmp
 
-# zookeeper
+# Instalando o ZooKeeper
 ENV ZOOKEEPER_VERSION 3.4.6
-RUN curl -s http://mirror.csclub.uwaterloo.ca/apache/zookeeper/zookeeper-$ZOOKEEPER_VERSION/zookeeper-$ZOOKEEPER_VERSION.tar.gz | tar -xz -C /usr/local/
-RUN cd /usr/local && ln -s ./zookeeper-$ZOOKEEPER_VERSION zookeeper
+# RUN curl -s http://mirror.csclub.uwaterloo.ca/apache/zookeeper/zookeeper-$ZOOKEEPER_VERSION/zookeeper-$ZOOKEEPER_VERSION.tar.gz | tar -xz -C /usr/local/
+RUN mkdir -p /usr/local/ && \
+    cd /usr/local/ && \
+    tar -xzf /tmp/zookeeper-$ZOOKEEPER_VERSION.tar.gz && \
+    mv zookeeper-$ZOOKEEPER_VERSION zookeeper
+
+# Configurando o ZooKeeper     
+# RUN cd /usr/local && ln -s ./zookeeper-$ZOOKEEPER_VERSION zookeeper
 ENV ZOO_HOME /usr/local/zookeeper
 ENV PATH $PATH:$ZOO_HOME/bin
 RUN mv $ZOO_HOME/conf/zoo_sample.cfg $ZOO_HOME/conf/zoo.cfg
 RUN mkdir /tmp/zookeeper
 
-# hbase
+# Ambiente HBase
 ENV HBASE_MAJOR 1.2
 ENV HBASE_MINOR 5
 ENV HBASE_VERSION "${HBASE_MAJOR}.${HBASE_MINOR}"
 
-COPY install /tmp
+# Instalando o HBase
+RUN cd /tmp/hbase-1.2.5-bin_tar_gz && \
+    cat xaa xab xac > ../hbase-1.2.5-bin.tar.gz && \
+    rm -rf xaa xab xac
+
+RUN echo "Vou fazer: tar -xzf /tmp/hbase-1.2.5-bin.tar.gz"  
+
+RUN cd /usr/local && \
+    tar -xzf /tmp/hbase-1.2.5-bin.tar.gz && \
+    ls -lat . && \
+    mv hbase-1.2.5 hbase && \
+    ls -lat hbase
+
+RUN cd /usr/local/hbase && \
+    cat conf/hbase-site.xml
 
 # Instalando o Apache Phoenix
 RUN cd /tmp/apache-phoenix-4.10.0-HBase-1.2-bin_tar_gz && \
@@ -29,34 +52,39 @@ RUN cd /tmp/apache-phoenix-4.10.0-HBase-1.2-bin_tar_gz && \
 
 RUN echo "Vou fazer: tar -xzf /tmp/apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz"  
 
-RUN cd /usr/local/hbase && \
+RUN mkdir -p /usr/local && \
+    cd /usr/local && \
     tar -xzf /tmp/apache-phoenix-4.10.0-HBase-1.2-bin.tar.gz && \
     ls -lat . && \
-    mv apache-phoenix-4.10.0-HBase-1.2-bin phoenix-hbase-jdbc && \
-    ls -lat phoenix-hbase-jdbc
+    mv apache-phoenix-4.10.0-HBase-1.2-bin phoenix && \
+    ls -lat phoenix
 
-#   |  RUN curl -s http://apache.mirror.gtcomm.net/hbase/$HBASE_VERSION/hbase-$HBASE_VERSION-bin.tar.gz | tar -xz -C /usr/local/
-#   |  RUN cd /usr/local && ln -s ./hbase-$HBASE_VERSION hbase
-#   |  ENV HBASE_HOME /usr/local/hbase
-#   |  ENV PATH $PATH:$HBASE_HOME/bin
-#   |  RUN rm $HBASE_HOME/conf/hbase-site.xml
-#   |  ADD hbase-site.xml $HBASE_HOME/conf/hbase-site.xml
-#   |  
-#   |  # phoenix
-#   |  ENV PHOENIX_VERSION 4.6.0
-#   |  RUN curl -s http://apache.mirror.vexxhost.com/phoenix/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MAJOR/bin/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MAJOR-bin.tar.gz | tar -xz -C /usr/local/
-#   |  RUN cd /usr/local && ln -s ./phoenix-$PHOENIX_VERSION-HBase-$HBASE_MAJOR-bin phoenix
-#   |  ENV PHOENIX_HOME /usr/local/phoenix
-#   |  ENV PATH $PATH:$PHOENIX_HOME/bin
-#   |  RUN cp $PHOENIX_HOME/phoenix-core-$PHOENIX_VERSION-HBase-$HBASE_MAJOR.jar $HBASE_HOME/lib/phoenix.jar
-#   |  RUN cp $PHOENIX_HOME/phoenix-server-$PHOENIX_VERSION-HBase-$HBASE_MAJOR.jar $HBASE_HOME/lib/phoenix-server.jar
-#   |  
-#   |  # bootstrap-phoenix
-#   |  ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
-#   |  RUN chown root:root /etc/bootstrap-phoenix.sh
-#   |  RUN chmod 700 /etc/bootstrap-phoenix.sh
-#   |  
-#   |  CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
-#   |  
+# Configurando o HBase
+ENV HBASE_HOME /usr/local/hbase
+ENV PATH $PATH:$HBASE_HOME/bin
+RUN ls -lat /usr/local
+RUN ls -lat $HBASE_HOME
+RUN ls -lat $HBASE_HOME/conf
+RUN rm $HBASE_HOME/conf/hbase-site.xml
+ADD hbase-site.xml $HBASE_HOME/conf/hbase-site.xml
+
+# Configurando o Apache Phoenix
+ENV PHOENIX_VERSION 4.10.0
+ENV PHOENIX_HOME /usr/local/phoenix
+ENV PATH $PATH:$PHOENIX_HOME/bin
+RUN cp /usr/local/phoenix/phoenix-core-$PHOENIX_VERSION-HBase-$HBASE_MAJOR.jar $HBASE_HOME/lib/phoenix.jar
+RUN cp $PHOENIX_HOME/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MAJOR-server.jar $HBASE_HOME/lib/phoenix-server.jar
+
+# bootstrap-phoenix
+ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
+RUN chown root:root /etc/bootstrap-phoenix.sh
+RUN chmod 700 /etc/bootstrap-phoenix.sh
+
+# TODO: Atualizar pra Java 8
+ENV JAVA_HOME /usr/java/jdk1.7.0_71
+
+RUN rm -rf /tmp/*
+
+CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
 
 EXPOSE 8765

@@ -24,5 +24,5 @@ if [[ $1 == "-bash" ]]; then
 fi
 
 if [[ $1 == "-sqlline" ]]; then
-  /usr/local/phoenix/hadoop2/bin/sqlline.py localhost
+  /usr/local/phoenix/bin/sqlline.py localhost
 fi
