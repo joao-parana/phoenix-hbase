@@ -37,8 +37,11 @@ ENV PATH $PATH:$PHOENIX_HOME/bin
 # Assim poderemos invocar o comando abaixo no contêiner para acessar o HBase via Phoenix
 # sqlline.py localhost
 
+WORKDIR /spica/work
+
 # bootstrap-phoenix
 ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
+ADD ddl-jsoares.sql /spica/work/ddl-jsoares.sql
 RUN chown root:root /etc/bootstrap-phoenix.sh
 RUN chmod 777 /etc/bootstrap-phoenix.sh
 
@@ -61,8 +64,6 @@ RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
 #     cat /usr/local/hbase/conf/hbase-env.sh
 
 # RUN rm -rf /tmp/*
-
-WORKDIR /spica/work
 
 VOLUME /desenv
 

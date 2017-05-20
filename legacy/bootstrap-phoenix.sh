@@ -4,11 +4,11 @@ function loadCSV {
   psql.py -t $1 localhost $2.csv
 }
 
-function hello {
-  echo "`date` - Iniciando o Bootstrap do HBase com Phoenix"
+function log {
+  echo "`date` - LOG - $1 "
 }
 
-hello
+log "Iniciando o HBase"
 
 : ${HADOOP_PREFIX:=/usr/local/hadoop}
 : ${ZOO_HOME:=/usr/local/zookeeper}
@@ -39,6 +39,9 @@ if [[ $1 == "-bash" ]]; then
 fi
 
 if [[ $1 == "-sqlline" ]]; then
+  log "Veja o tamanho do arquivo DDL"
+  ls -la /spica/work/ddl-jsoares.sql
+  sqlline.py localhost:2181:/spica/work/ddl-jsoares.sql
   cd /desenv/queries_novas
   loadCSV PART      part
   loadCSV SUPPLIER  supplier
@@ -48,7 +51,6 @@ if [[ $1 == "-sqlline" ]]; then
   loadCSV LINEITEM  lineitem
   loadCSV NATION    nation
   loadCSV REGION    region
-  cat /tmp/ddl-jsoares.sql | sqlline.py localhost
   /usr/local/phoenix/bin/sqlline.py localhost
   cd -
   /bin/bash
