@@ -39,6 +39,7 @@ if [[ $1 == "-bash" ]]; then
 fi
 
 if [[ $1 == "-sqlline" ]]; then
+  cd /desenv/queries_novas
   loadCSV PART      part
   loadCSV SUPPLIER  supplier
   loadCSV PARTSUPP  partsupp
@@ -49,5 +50,6 @@ if [[ $1 == "-sqlline" ]]; then
   loadCSV REGION    region
   cat /tmp/ddl-jsoares.sql | sqlline.py localhost
   /usr/local/phoenix/bin/sqlline.py localhost
+  cd -
   /bin/bash
 fi
