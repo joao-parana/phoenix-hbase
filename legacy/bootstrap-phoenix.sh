@@ -41,7 +41,7 @@ fi
 if [[ $1 == "-sqlline" ]]; then
   log "Veja o tamanho do arquivo DDL"
   ls -la /spica/work/ddl-jsoares.sql
-  sqlline.py localhost:2181:/spica/work/ddl-jsoares.sql
+  sqlline.py localhost:2181 /spica/work/ddl-jsoares.sql
   cd /desenv/queries_novas
   loadCSV PART      part
   loadCSV SUPPLIER  supplier
@@ -51,7 +51,8 @@ if [[ $1 == "-sqlline" ]]; then
   loadCSV LINEITEM  lineitem
   loadCSV NATION    nation
   loadCSV REGION    region
-  /usr/local/phoenix/bin/sqlline.py localhost
   cd -
+  echo "Benchmark TP-H - HBase - João Antonio Ferreira e Raphael Abreu" > /spica/work/queries.log
+  sqlline.py localhost:2181 /spica/work/dml-jsoares-01.sql >> /spica/work/queries.log
   /bin/bash
 fi

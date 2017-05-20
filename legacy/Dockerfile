@@ -68,6 +68,7 @@ RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
 VOLUME /desenv
 
 EXPOSE 8765
+EXPOSE 2181
 
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
 
