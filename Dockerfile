@@ -99,6 +99,8 @@ RUN rm -rf /tmp/*
 
 WORKDIR /spica/work
 
+VOLUME /desenv
+
 # RUN ENV HADOOP_CLASSPATH `$HBASE_HOME/bin/hbase classpath`
 
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]

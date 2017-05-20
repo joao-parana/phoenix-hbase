@@ -10,10 +10,11 @@ The table metadata is stored in an HBase table and versioned, such that snapshot
 Direct use of the HBase API, along with coprocessors and custom filters, results in performance on the order of milliseconds for small queries, or seconds for tens of millions of rows.
 
 ### Versions
-ZooKeeper 3.4.6
-Apache Hadoop - 2.7.1
-Apache HBase - 1.2.5
-Apache Phoenix - 4.10.0
+
+* ZooKeeper 3.4.6
+* Apache Hadoop - 2.7.1
+* Apache HBase - 1.2.5
+* Apache Phoenix - 4.10.0
 
 ### Build Docker Image
 
@@ -73,16 +74,56 @@ Refer to [Zookeeper](http://hbase.apache.org/book.html#zookeeper)
 
 #### Try with another image
 
-```
+##### Interactive mode
+
+```bash
 cd legacy
 docker build -t parana/docker-phoenix-master .
 docker save -o docker-phoenix-master.tar  parana/docker-phoenix-master:latest
 scp -P 49133 docker-phoenix-master.tar  parana@my-remote-host:~/
+```
+
+```bash
 # On my-remote-host I need to do:
 docker load -i docker-phoenix-master.tar  -q
 docker images
-docker run -it parana/docker-phoenix-master /etc/bootstrap-phoenix.sh -sqlline
+docker run -it --rm parana/docker-phoenix-master /etc/bootstrap-phoenix.sh -sqlline
 ```
+
+##### Running Deamon mode
+
+Start the container
+
+```bash
+docker run -d --name hbase -v $PWD/desenv:/desenv parana/docker-phoenix-master /etc/bootstrap-phoenix.sh -d
+```
+
+Enter on bash shell inside the container
+
+```bash
+docker exec -it hbase bash
+```
+
+Run SQL client CLI
+
+```
+/usr/local/phoenix/bin/sqlline.py localhost
+```
+
+Now you can paste SQL (DML or DDL) code, for example:
+
+```sql
+CREATE TABLE PART ( P_PARTKEY INTEGER NOT NULL, P_NAME VARCHAR(55), P_MFGR CHAR(25), P_BRAND CHAR(10), P_TYPE VARCHAR(25), P_SIZE INTEGER, P_CONTAINER CHAR(10), P_RETAILPRICE DECIMAL(12,2), P_COMMENT VARCHAR(23), CONSTRAINT PART_PK PRIMARY KEY (P_PARTKEY) );
+CREATE TABLE SUPPLIER ( S_SUPPKEY INTEGER NOT NULL, S_NAME CHAR(25), S_ADDRESS VARCHAR(40), S_NATIONKEY INTEGER, S_PHONE CHAR(15), S_ACCTBAL DECIMAL(12,2), S_COMMENT VARCHAR(101), CONSTRAINT SUPPLIER_PK PRIMARY KEY (S_SUPPKEY) );
+CREATE TABLE PARTSUPP ( PS_PARTKEY INTEGER NOT NULL, PS_SUPPKEY INTEGER NOT NULL, PS_AVAILQTY INTEGER, PS_SUPPLYCOST DECIMAL(12,2), PS_COMMENT VARCHAR(199), CONSTRAINT PARTSUPP_PK PRIMARY KEY (PS_PARTKEY, PS_SUPPKEY) );
+CREATE TABLE CUSTOMER ( C_CUSTKEY INTEGER NOT NULL, C_NAME CHAR(25), C_ADDRESS VARCHAR(40), C_NATIONKEY INTEGER, C_PHONE CHAR(15), C_ACCTBAL DECIMAL(12,2), C_MKTSEGMENT VARCHAR(10), C_COMMENT text, CONSTRAINT CUSTUMER_PK PRIMARY KEY (C_CUSTKEY) );
+CREATE TABLE ORDERS ( O_ORDERKEY INTEGER NOT NULL, O_CUSTKEY INTEGER, O_ORDERSTATUS CHAR(1), O_TOTALPRICE DECIMAL(12,2), O_ORDERDATE TIMESTAMP, /* tipo DATE no Oracle */ O_ORDERPRIORITY CHAR(15), O_CLERK CHAR(15), O_SHIPPRIORITY INTEGER, O_COMMENT text, CONSTRAINT ORDERS_PK PRIMARY KEY (O_ORDERKEY) );
+CREATE TABLE LINEITEM ( L_ORDERKEY INTEGER NOT NULL, L_PARTKEY INTEGER, L_SUPPKEY INTEGER, L_LINENUMBER INTEGER NOT NULL, L_QUANTITY DECIMAL(12,2), L_EXTENDEDPRICE DECIMAL(12,2), L_DISCOUNT DECIMAL(12,2), L_TAX DECIMAL(12,2), L_RETURNFLAG CHAR(1), L_LINESTATUS CHAR(1), L_SHIPDATE TIMESTAMP, L_COMMITDATE TIMESTAMP, L_RECEIPTDATE TIMESTAMP, L_SHIPINSTRUCT CHAR(25), L_SHIPMODE CHAR(10), L_COMMENT text, CONSTRAINT LINEITEM_PK PRIMARY KEY (L_ORDERKEY, L_LINENUMBER) );
+CREATE TABLE NATION ( N_NATIONKEY INTEGER NOT NULL, N_NAME CHAR(25), N_REGIONKEY INTEGER, N_COMMENT VARCHAR(152), CONSTRAINT NATION_PK PRIMARY KEY (N_NATIONKEY) );
+CREATE TABLE REGION ( R_REGIONKEY INTEGER NOT NULL, R_NAME CHAR(25), R_COMMENT VARCHAR(152), CONSTRAINT REGION_PK PRIMARY KEY (R_REGIONKEY) );
+```
+
+
 
 
 #### Testing
@@ -111,7 +152,6 @@ GROUP BY state
 ORDER BY sum(population) DESC;
 ```
 
-
 ## More About HBase
 
 Why do we need NoSQL?
@@ -119,6 +159,7 @@ Why do we need NoSQL?
 The Relational Databases have the following challenges:
 
 Not good for large volume (Petabytes) of data with variety of data types (eg. images, videos, text)
+
 * Cannot scale for large data volume
 * Cannot scale-up, limited by memory and CPU capabilities
 * Cannot scale-out, limited by cache dependent Read and Write operations
