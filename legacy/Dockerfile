@@ -55,6 +55,12 @@ RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
 #     echo "" >> /usr/local/hbase/conf/hbase-env.sh && \
 #     cat /usr/local/hbase/conf/hbase-env.sh
 
+RUN rm -rf /tmp/*
+
+WORKDIR /spica/work
+
+VOLUME /desenv
+
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
 
 EXPOSE 8765
