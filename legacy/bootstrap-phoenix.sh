@@ -1,5 +1,15 @@
 #!/bin/bash
 
+function loadCSV {
+  psql.py -t $1 localhost $2.csv
+}
+
+function hello {
+  echo "`date` - Iniciando o Bootstrap do HBase com Phoenix"
+}
+
+hello
+
 : ${HADOOP_PREFIX:=/usr/local/hadoop}
 : ${ZOO_HOME:=/usr/local/zookeeper}
 : ${HBASE_HOME:=/usr/local/hbase}
@@ -29,6 +39,15 @@ if [[ $1 == "-bash" ]]; then
 fi
 
 if [[ $1 == "-sqlline" ]]; then
+  loadCSV PART      part
+  loadCSV SUPPLIER  supplier
+  loadCSV PARTSUPP  partsupp
+  loadCSV CUSTOMER  customer
+  loadCSV ORDERS    orders
+  loadCSV LINEITEM  lineitem
+  loadCSV NATION    nation
+  loadCSV REGION    region
+  cat /tmp/ddl-jsoares.sql | sqlline.py localhost
   /usr/local/phoenix/bin/sqlline.py localhost
   /bin/bash
 fi
