@@ -53,6 +53,9 @@ if [[ $1 == "-sqlline" ]]; then
   loadCSV REGION    region
   cd -
   echo "Benchmark TP-H - HBase - João Antonio Ferreira e Raphael Abreu" > /spica/work/queries.log
-  sqlline.py localhost:2181 /spica/work/dml-jsoares-01.sql >> /spica/work/queries.log
+  sqlline.py localhost:2181 /spica/work/catalog.sql >> /spica/work/queries.log
+  time sqlline.py localhost:2181 /spica/work/dml-jsoares-01.sql >> /spica/work/queries.log
+  echo "• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • "
+  cat /spica/work/queries.log
   /bin/bash
 fi

@@ -1,0 +1,3 @@
+!tables
+!columns CATALOG
+!quit
