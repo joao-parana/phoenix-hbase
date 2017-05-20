@@ -65,8 +65,9 @@ ENV PATH $PATH:$HBASE_HOME/bin
 RUN ls -lat /usr/local
 RUN ls -lat $HBASE_HOME
 RUN ls -lat $HBASE_HOME/conf
-RUN rm $HBASE_HOME/conf/hbase-site.xml
+RUN mv $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original
 ADD hbase-site.xml $HBASE_HOME/conf/hbase-site.xml
+RUN diff $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original
 
 # Configurando o Apache Phoenix
 ENV PHOENIX_VERSION 4.10.0
@@ -74,11 +75,14 @@ ENV PHOENIX_HOME /usr/local/phoenix
 ENV PATH $PATH:$PHOENIX_HOME/bin
 RUN cp /usr/local/phoenix/phoenix-core-$PHOENIX_VERSION-HBase-$HBASE_MAJOR.jar $HBASE_HOME/lib/phoenix.jar
 RUN cp $PHOENIX_HOME/phoenix-$PHOENIX_VERSION-HBase-$HBASE_MAJOR-server.jar $HBASE_HOME/lib/phoenix-server.jar
+ENV PATH $PATH:$PHOENIX_HOME/bin
+# Assim poderemos invocar o comando abaixo no contêiner para acessar o HBase via Phoenix
+# sqlline.py localhost
 
 # bootstrap-phoenix
 ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
 RUN chown root:root /etc/bootstrap-phoenix.sh
-RUN chmod 700 /etc/bootstrap-phoenix.sh
+RUN chmod 777 /etc/bootstrap-phoenix.sh
 
 RUN yum install -y python-argparse.noarch
 
@@ -87,7 +91,9 @@ ENV JAVA_HOME /usr/java/jdk1.7.0_71
 RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
     echo "# O HBase não lê do ambiente global. Temos de setar aqui o JAVA_HOME" >> /usr/local/hbase/conf/hbase-env.sh && \
     echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> /usr/local/hbase/conf/hbase-env.sh
+    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> /usr/local/hbase/conf/hbase-env.sh && \
+    echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
+    echo " " >> /usr/local/hbase/conf/hbase-env.sh
 
 # O comando abaixo deveria retirar o erro de binding na porta do ZooKeeper
 # RUN echo "# HBase pode rodar sem seu proprio ZooKeeper" >> /usr/local/hbase/conf/hbase-env.sh && \
@@ -95,14 +101,15 @@ RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
 #     echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
 #     echo "" >> /usr/local/hbase/conf/hbase-env.sh
 
-RUN rm -rf /tmp/*
+# RUN rm -rf /tmp/*
 
 WORKDIR /spica/work
 
 VOLUME /desenv
 
 # RUN ENV HADOOP_CLASSPATH `$HBASE_HOME/bin/hbase classpath`
+EXPOSE 8765
 
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
 
-EXPOSE 8765
+
