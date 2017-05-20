@@ -15,6 +15,11 @@ $HADOOP_PREFIX/sbin/start-yarn.sh
 $ZOO_HOME/bin/zkServer.sh start
 $HBASE_HOME/bin/start-hbase.sh
 
+echo "`date` - Checando as versões"
+$HADOOP_PREFIX/bin/hadoop version
+$ZOO_HOME/bin/zkServer.sh status
+$HBASE_HOME/bin/hbase version
+
 if [[ $1 == "-d" ]]; then
   while true; do sleep 1000000; done
 fi

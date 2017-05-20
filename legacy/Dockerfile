@@ -21,7 +21,7 @@ ENV HBASE_HOME /usr/local/hbase
 ENV PATH $PATH:$HBASE_HOME/bin
 RUN mv $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original
 ADD hbase-site.xml $HBASE_HOME/conf/hbase-site.xml
-RUN diff $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original
+RUN diff $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original ; /bin/true
 
 # phoenix
 ENV PHOENIX_VERSION 4.9.0

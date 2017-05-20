@@ -67,7 +67,7 @@ RUN ls -lat $HBASE_HOME
 RUN ls -lat $HBASE_HOME/conf
 RUN mv $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original
 ADD hbase-site.xml $HBASE_HOME/conf/hbase-site.xml
-RUN diff $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original
+RUN diff $HBASE_HOME/conf/hbase-site.xml /tmp/hbase-site.xml-original ; /bin/true
 
 # Configurando o Apache Phoenix
 ENV PHOENIX_VERSION 4.10.0
