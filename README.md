@@ -211,12 +211,45 @@ you can load using this:
   loadCSV REGION   region
 ```
 
+With the following bash code we run setup and all TPC-H queries 
 
+```bash
+if [[ $1 == "-sqlline" ]]; then
+  log "Veja o tamanho do arquivo DDL"
+  ls -la /spica/work/ddl-jsoares.sql
+  sqlline.py localhost:2181 /spica/work/ddl-jsoares.sql
+  cd /desenv/queries_novas
+  loadCSV PART      part
+  loadCSV SUPPLIER  supplier
+  loadCSV PARTSUPP  partsupp
+  loadCSV CUSTOMER  customer
+  loadCSV ORDERS    orders
+  loadCSV LINEITEM  lineitem
+  loadCSV NATION    nation
+  loadCSV REGION    region
+  cd -
+  echo "`date` - Benchmark TP-H - HBase - João Antonio Ferreira e Raphael Abreu" > /spica/work/queries.log
+  sqlline.py localhost:2181 /spica/work/catalog.sql >> /spica/work/queries.log
+  for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
+  do
+    echo "`date` - Executando Query $i" >> /spica/work/queries.log
+    time sqlline.py localhost:2181 /spica/work/dml-jsoares-$i.sql >> /spica/work/queries.log
+  done
+  echo "• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • "
+  echo "`date` - Benchmark TP-H - End" > /spica/work/queries.log
+  cat /spica/work/queries.log
+  /bin/bash
+fi
+```
+
+Where dml-jsoares-01.sql and dml-jsoares-02.sql is: 
 
 ```sql
 select l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice * (1 - l_discount)) as sum_disc_price, sum(l_extendedprice * (1 - l_discount) * (1 + l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order from lineitem where l_shipdate <= date '1998-12-01' group by l_returnflag, l_linestatus order by l_returnflag, l_linestatus;
 select s_acctbal, s_name, n_name, p_partkey, p_mfgr, s_address, s_phone, s_comment from part, supplier, partsupp, nation, region where p_partkey = ps_partkey and s_suppkey = ps_suppkey and p_size = 15 and p_type like '%PLATED%' and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'AMERICA' and ps_supplycost = ( select min(ps_supplycost) from partsupp, supplier, nation, region where p_partkey = ps_partkey and s_suppkey = ps_suppkey and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = 'AMERICA' ) order by s_acctbal desc, n_name, s_name, p_partkey;
 ``
+
+
 #### Testing
 
 ```sql
