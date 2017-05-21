@@ -54,9 +54,10 @@ if [[ $1 == "-sqlline" ]]; then
   cd -
   echo "Benchmark TP-H - HBase - João Antonio Ferreira e Raphael Abreu" > /spica/work/queries.log
   sqlline.py localhost:2181 /spica/work/catalog.sql >> /spica/work/queries.log
-  for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22
+  for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
   do
-    time sqlline.py localhost:2181 /spica/work/dml-jsoares-01.sql >> /spica/work/queries.log
+    echo "`date` - Executando Query $i" >> /spica/work/queries.log
+    time sqlline.py localhost:2181 /spica/work/dml-jsoares-$i.sql >> /spica/work/queries.log
   done
   echo "• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • "
   cat /spica/work/queries.log
