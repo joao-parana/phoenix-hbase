@@ -56,8 +56,10 @@ if [[ $1 == "-sqlline" ]]; then
   sqlline.py localhost:2181 /spica/work/catalog.sql >> /spica/work/queries.log
   for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22
   do
+    echo "`date` - Executando Query $i"
     echo "`date` - Executando Query $i" >> /spica/work/queries.log
     time sqlline.py localhost:2181 /spica/work/dml-jsoares-$i.sql >> /spica/work/queries.log
+    tail -n 5 /spica/work/queries.log
   done
   echo "• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • "
   cat /spica/work/queries.log
