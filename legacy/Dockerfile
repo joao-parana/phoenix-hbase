@@ -42,7 +42,7 @@ WORKDIR /spica/work
 # bootstrap-phoenix
 ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
 ADD ddl-jsoares.sql      /spica/work/ddl-jsoares.sql
-ADD dml-jsoares-01.sql   /spica/work/dml-jsoares-01.sql
+ADD dml-jsoares-*.sql    /spica/work/
 ADD catalog.sql          /spica/work/catalog.sql
 RUN chown root:root /etc/bootstrap-phoenix.sh
 RUN chmod 777 /etc/bootstrap-phoenix.sh
