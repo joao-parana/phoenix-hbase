@@ -5,6 +5,8 @@ function loadCSV {
 }
 
 function log {
+  echo ""
+  echo "• • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • • "
   echo "`date` - LOG - $1 "
 }
 
@@ -18,14 +20,16 @@ rm /tmp/*.pid
 
 # installing libraries if any - (resource urls added comma separated to the ACP system variable)
 cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
-
+log "`date` - Verificando os Processos"
+ps -ef | grep -E --color=auto -i "hbase|hadoop|zookeeper|java"
 service sshd start
 $HADOOP_PREFIX/sbin/start-dfs.sh
 $HADOOP_PREFIX/sbin/start-yarn.sh
 $ZOO_HOME/bin/zkServer.sh start
 $HBASE_HOME/bin/start-hbase.sh
-
-echo "`date` - Checando as versões"
+log "`date` - Verificando os Processos"
+ps -ef | grep -E --color=auto -i "hbase|hadoop|zookeeper|java"
+log "`date` - Checando as versões"
 $HADOOP_PREFIX/bin/hadoop version
 $ZOO_HOME/bin/zkServer.sh status
 $HBASE_HOME/bin/hbase version

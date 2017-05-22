@@ -41,6 +41,8 @@ WORKDIR /spica/work
 
 # bootstrap-phoenix
 ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
+ADD do-benchmark.sh      /etc/do-benchmark.sh
+ADD start-hbase.sh       /etc/start-hbase.sh
 ADD ddl-jsoares.sql      /spica/work/ddl-jsoares.sql
 ADD dml-jsoares-*.sql    /spica/work/
 ADD catalog.sql          /spica/work/catalog.sql
