@@ -20,7 +20,7 @@ export PATH=$JAVA_HOME/bin:$PATH:$PHOENIX_HOME/bin
 echo "Este shell Bash vai executar todo o Benchmark TPC-H. Digite SIM para continuar"
 while read -e -t 1; do : ; done
 read resp
-if [ $resp. != 'SIM.' ]; then
+if [ "$resp." != 'SIM.' ]; then
     exit 0
 fi
 

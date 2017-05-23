@@ -27,8 +27,8 @@ cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; 
 ps -ef | grep sshd
 log "Verificando os processos"
 ps -ef | grep -E --color=auto -i "sshd|hbase|hadoop|zookeeper|java" > /tmp/process-running.txt
-cat /tmp/process-running.txt
-cat /tmp/process-running.txt | /etc/only-summary.sh 
+# cat /tmp/process-running.txt
+cat /tmp/process-running.txt | /etc/only-summary.sh | sort
 echo "Verifique que os processos NÃO estão rodando ? Digite SIM para continuar"
 while read -e -t 1; do : ; done
 read resp
@@ -56,8 +56,8 @@ ls -la /spica/work/ddl-jsoares.sql
 
 echo "Verifique se os processos estão rodando. Digite SIM para continuar"
 ps -ef | grep -E --color=auto -i "sshd|hbase|hadoop|zookeeper|java" > /tmp/process-running.txt
-cat /tmp/process-running.txt
-cat /tmp/process-running.txt | /etc/only-summary.sh 
+# cat /tmp/process-running.txt
+cat /tmp/process-running.txt | /etc/only-summary.sh | sort
 while read -e -t 1; do : ; done
 read resp
 if [ $resp. != 'SIM.' ]; then

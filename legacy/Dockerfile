@@ -1,6 +1,17 @@
 FROM sequenceiq/hadoop-docker:2.7.0
 
-MAINTAINER SequenceIQ
+MAINTAINER joao.parana@gmail.com
+
+# | # Estas variáveis são definidas também no Dockerfile do qual herdo.
+# | ENV JAVA_HOME /usr/java/default
+# | ENV PATH $PATH:$JAVA_HOME/bin
+# | ENV HADOOP_PREFIX /usr/local/hadoop
+# | ENV HADOOP_COMMON_HOME /usr/local/hadoop
+# | ENV HADOOP_HDFS_HOME /usr/local/hadoop
+# | ENV HADOOP_MAPRED_HOME /usr/local/hadoop
+# | ENV HADOOP_YARN_HOME /usr/local/hadoop
+# | ENV HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
+# | ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
 
 # zookeeper
 ENV ZOOKEEPER_VERSION 3.4.6

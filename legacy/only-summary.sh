@@ -15,7 +15,10 @@ function filter {
     if [[ $element == *"bin/java"* ]]; then
       RESULT="$RESULT $element"
     fi
-    if [[ $element == *"hadoop.yarn.server.resourcemanager.ResourceManager"* ]]; then
+    if [[ $element == *"yarn.server.resourcemanager.ResourceManager"* ]]; then
+      RESULT="$RESULT $element"
+    fi
+    if [[ $element == *"yarn.server.nodemanager.NodeManager"* ]]; then
       RESULT="$RESULT $element"
     fi
     if [[ $element == *"hadoop.hbase.master.HMaster"* ]]; then
@@ -27,8 +30,20 @@ function filter {
     if [[ $element == *"zookeeper.server.quorum.QuorumPeerMain"* ]]; then
       RESULT="$RESULT $element"
     fi
+    if [[ $element == *"hdfs.server.namenode.NameNode"* ]]; then
+      RESULT="$RESULT $element"
+    fi
+    if [[ $element == *"hdfs.server.namenode.SecondaryNameNode"* ]]; then
+      RESULT="$RESULT $element"
+    fi
+    if [[ $element == *"hadoop.hdfs.server.datanode.DataNode"* ]]; then
+      RESULT="$RESULT $element"
+    fi
+
   done
-  echo $RESULT
+  if [ "$RESULT." != '.' ]; then
+    echo $RESULT
+  fi
 }
 
 while read LINE; do
