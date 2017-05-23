@@ -110,6 +110,10 @@ VOLUME /desenv
 # RUN ENV HADOOP_CLASSPATH `$HBASE_HOME/bin/hbase classpath`
 EXPOSE 8765
 
+RUN echo "`date` - ATENÇÃO: é importante verificar se todas a svariáveis JAVA_HOME estão corretas" &&\
+    find / -type f -exec grep JAVA_HOME {} \; && \
+    find /etc -type f -exec grep JAVA_HOME {} \;
+
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
 
 

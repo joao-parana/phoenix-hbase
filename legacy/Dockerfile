@@ -43,6 +43,7 @@ WORKDIR /spica/work
 ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
 ADD do-benchmark.sh      /etc/do-benchmark.sh
 ADD start-hbase.sh       /etc/start-hbase.sh
+ADD only-summary.sh      /etc/only-summary.sh
 ADD ddl-jsoares.sql      /spica/work/ddl-jsoares.sql
 ADD dml-jsoares-*.sql    /spica/work/
 ADD catalog.sql          /spica/work/catalog.sql
@@ -74,5 +75,8 @@ VOLUME /desenv
 EXPOSE 8765
 EXPOSE 2181
 
-CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
+RUN echo "`date` - ATENÇÃO: é importante verificar se todas a svariáveis JAVA_HOME estão corretas" &&\
+    find / -type f -exec grep JAVA_HOME {} \; && \
+    find /etc -type f -exec grep JAVA_HOME {} \;
 
+CMD ["/etc/bootstrap-phoenix.sh", "-bash"]

@@ -13,7 +13,7 @@ function log {
 export HADOOP_PREFIX=/usr/local/hadoop
 export ZOO_HOME=/usr/local/zookeeper
 export HBASE_HOME=/usr/local/hbase
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export JAVA_HOME=/usr/java/jdk1.7.0_71
 export PHOENIX_HOME=/usr/local/phoenix
 export PATH=$JAVA_HOME/bin:$PATH:$PHOENIX_HOME/bin
 
@@ -24,7 +24,7 @@ if [ $resp. != 'SIM.' ]; then
     exit 0
 fi
 
-if [ $1 = 'DDL' ]; then
+if [ $1. == 'DDL.' ]; then
     sqlline.py localhost:2181 /spica/work/ddl-jsoares.sql
     cd /desenv/queries_novas
     loadCSV PART      part

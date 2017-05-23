@@ -15,7 +15,7 @@ log "Iniciando o HBase"
 export HADOOP_PREFIX=/usr/local/hadoop
 export ZOO_HOME=/usr/local/zookeeper
 export HBASE_HOME=/usr/local/hbase
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+export JAVA_HOME=/usr/java/jdk1.7.0_71
 export PHOENIX_HOME=/usr/local/phoenix
 export PATH=$JAVA_HOME/bin:$PATH:$PHOENIX_HOME/bin
 
@@ -26,7 +26,9 @@ cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; 
 
 ps -ef | grep sshd
 log "Verificando os processos"
-ps -ef | grep -E --color=auto -i "sshd|hbase|hadoop|zookeeper|java"
+ps -ef | grep -E --color=auto -i "sshd|hbase|hadoop|zookeeper|java" > /tmp/process-running.txt
+cat /tmp/process-running.txt
+cat /tmp/process-running.txt | /etc/only-summary.sh 
 echo "Verifique que os processos NÃO estão rodando ? Digite SIM para continuar"
 while read -e -t 1; do : ; done
 read resp
@@ -52,16 +54,17 @@ env
 log "Veja o tamanho do arquivo DDL"
 ls -la /spica/work/ddl-jsoares.sql
 
-log "Verificando os processos"
-ps -ef | grep -E --color=auto -i "sshd|hbase|hadoop|zookeeper|java"
 echo "Verifique se os processos estão rodando. Digite SIM para continuar"
+ps -ef | grep -E --color=auto -i "sshd|hbase|hadoop|zookeeper|java" > /tmp/process-running.txt
+cat /tmp/process-running.txt
+cat /tmp/process-running.txt | /etc/only-summary.sh 
 while read -e -t 1; do : ; done
 read resp
 if [ $resp. != 'SIM.' ]; then
     exit 0
 fi
 
-if [ $1 = 'DDL' ]; then
+if [ $1. = 'DDL.' ]; then
     sqlline.py localhost:2181 /spica/work/ddl-jsoares.sql
     cd /desenv/queries_novas
     loadCSV PART      part
