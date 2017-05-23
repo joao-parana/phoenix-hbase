@@ -40,6 +40,7 @@ ENV PATH $PATH:$PHOENIX_HOME/bin
 WORKDIR /spica/work
 
 # bootstrap-phoenix
+RUN ls -lat /etc
 ADD bootstrap-phoenix.sh /etc/bootstrap-phoenix.sh
 ADD do-benchmark.sh      /etc/do-benchmark.sh
 ADD start-hbase.sh       /etc/start-hbase.sh
@@ -50,14 +51,22 @@ ADD catalog.sql          /spica/work/catalog.sql
 RUN chown root:root /etc/bootstrap-phoenix.sh
 RUN chmod 777 /etc/bootstrap-phoenix.sh
 
+
 ENV JAVA_HOME /usr/java/jdk1.7.0_71
-RUN echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "# O HBase não lê do ambiente global. Temos de setar aqui o JAVA_HOME" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "#" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> /usr/local/hbase/conf/hbase-env.sh && \
-    echo "#" >> /usr/local/hbase/conf/hbase-env.sh&& \
-    echo "" >> /usr/local/hbase/conf/hbase-env.sh&& \
-    cat /usr/local/hbase/conf/hbase-env.sh
+RUN echo "#" >> $HBASE_HOME/conf/hbase-env.sh && \
+    echo "# O HBase não lê do ambiente global. Temos de setar aqui o JAVA_HOME" >> $HBASE_HOME/conf/hbase-env.sh && \
+    echo "#" >> $HBASE_HOME/conf/hbase-env.sh && \
+    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> $HBASE_HOME/conf/hbase-env.sh && \
+    echo "#" >> $HBASE_HOME/conf/hbase-env.sh&& \
+    echo "" >> $HBASE_HOME/conf/hbase-env.sh&& \
+    cat $HBASE_HOME/conf/hbase-env.sh
+
+RUN echo "# O Hadoop não lê do ambiente global. Temos de setar aqui o JAVA_HOME" >> $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && \
+    echo "#" >> $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && \
+    echo "export JAVA_HOME=/usr/java/jdk1.7.0_71" >> $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && \
+    echo "#" >> $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && \
+    echo "" >> $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && \
+    cat $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
 # O comando abaixo deveria retirar o erro de binding na porta do ZooKeeper 
 # quando usamos HBASE_MANAGES_ZK=false mas o que acontece e que passa a dar
@@ -83,6 +92,9 @@ EXPOSE 2181
 #     find . -type f -exec grep -l jdk1.8.0  {} \;
 # 
 # RUN for a in `echo "/usr/local/hbase-1.1.10/bin/hbase-daemon.sh /usr/local/hbase-1.1.10/conf/hbase-env.sh /usr/local/apache-phoenix-4.9.0-HBase-1.1-bin/bin/config/env.sh /usr/local/zookeeper-3.4.6/src/packages/update-zookeeper-env.sh /usr/local/zookeeper-3.4.6/src/packages/templates/conf/zookeeper-env.sh /usr/local/hadoop-2.7.0/bin/rcc /usr/local/hadoop-2.7.0/bin/yarn /usr/local/hadoop-2.7.0/etc/hadoop/yarn-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/hadoop-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/mapred-env.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/libexec/hadoop-config.sh /etc/start-hbase.sh /etc/do-benchmark.sh"` 
-RUN  cat /usr/local/hbase-1.1.10/bin/hbase-daemon.sh /usr/local/hbase-1.1.10/conf/hbase-env.sh /usr/local/apache-phoenix-4.9.0-HBase-1.1-bin/bin/config/env.sh /usr/local/zookeeper-3.4.6/src/packages/update-zookeeper-env.sh /usr/local/zookeeper-3.4.6/src/packages/templates/conf/zookeeper-env.sh /usr/local/hadoop-2.7.0/bin/rcc /usr/local/hadoop-2.7.0/bin/yarn /usr/local/hadoop-2.7.0/etc/hadoop/yarn-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/hadoop-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/mapred-env.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/libexec/hadoop-config.sh /etc/start-hbase.sh /etc/do-benchmark.sh | grep "JAVA_HOME="
+# RUN  cat /usr/local/hbase-1.1.10/bin/hbase-daemon.sh /usr/local/hbase-1.1.10/conf/hbase-env.sh /usr/local/apache-phoenix-4.9.0-HBase-1.1-bin/bin/config/env.sh /usr/local/zookeeper-3.4.6/src/packages/update-zookeeper-env.sh /usr/local/zookeeper-3.4.6/src/packages/templates/conf/zookeeper-env.sh /usr/local/hadoop-2.7.0/bin/rcc /usr/local/hadoop-2.7.0/bin/yarn /usr/local/hadoop-2.7.0/etc/hadoop/yarn-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/hadoop-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/mapred-env.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/libexec/hadoop-config.sh /etc/start-hbase.sh /etc/do-benchmark.sh | grep "JAVA_HOME="
+
+RUN for a in `find /usr/local/hadoop-2.7.0 -type f -exec grep -l "JAVA_HOME=" {} \;` ; do    echo $a ;   grep "JAVA_HOME=" $a ; done
+RUN for a in `find /etc -type f -exec grep -l "JAVA_HOME=" {} \;` ; do    echo $a ;   grep "JAVA_HOME=" $a ; done
 
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]

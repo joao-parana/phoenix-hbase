@@ -24,7 +24,7 @@ function filter {
     if [[ $element == *"hadoop.hbase.regionserver.HRegionServer"* ]]; then
       RESULT="$RESULT $element"
     fi
-    if [[ $element == *"zookeeper"* ]]; then
+    if [[ $element == *"zookeeper.server.quorum.QuorumPeerMain"* ]]; then
       RESULT="$RESULT $element"
     fi
   done
