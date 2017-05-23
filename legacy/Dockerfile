@@ -2,6 +2,8 @@ FROM sequenceiq/hadoop-docker:2.7.0
 
 MAINTAINER joao.parana@gmail.com
 
+ENV REFRESHED_AT 2017-05-23
+
 # | # Estas variáveis são definidas também no Dockerfile do qual herdo.
 # | ENV JAVA_HOME /usr/java/default
 # | ENV PATH $PATH:$JAVA_HOME/bin

@@ -65,15 +65,15 @@ if [ $resp. != 'SIM.' ]; then
 fi
 
 if [ $1. = 'DDL.' ]; then
-    sqlline.py localhost:2181 /spica/work/ddl-jsoares.sql
+    time sqlline.py localhost:2181 /spica/work/ddl-jsoares.sql
     cd /desenv/queries_novas
-    loadCSV PART      part
-    loadCSV SUPPLIER  supplier
-    loadCSV PARTSUPP  partsupp
-    loadCSV CUSTOMER  customer
-    loadCSV ORDERS    orders
-    loadCSV LINEITEM  lineitem
-    loadCSV NATION    nation
-    loadCSV REGION    region
+    time loadCSV PART      part
+    time loadCSV SUPPLIER  supplier
+    time loadCSV PARTSUPP  partsupp
+    time loadCSV CUSTOMER  customer
+    time loadCSV ORDERS    orders
+    time loadCSV LINEITEM  lineitem
+    time loadCSV NATION    nation
+    time loadCSV REGION    region
     exit 0
 fi
