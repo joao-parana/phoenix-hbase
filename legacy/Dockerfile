@@ -75,8 +75,14 @@ VOLUME /desenv
 EXPOSE 8765
 EXPOSE 2181
 
-RUN echo "`date` - ATENÇÃO: é importante verificar se todas a svariáveis JAVA_HOME estão corretas" &&\
-    find / -type f -exec grep JAVA_HOME {} \; && \
-    find /etc -type f -exec grep JAVA_HOME {} \;
+# RUN echo "`date` - ATENÇÃO: é importante verificar se todas as variáveis JAVA_HOME estão corretas" && \
+#     find /usr/local -type f -exec grep "JAVA_HOME=" {} \;     && \
+#     find /etc -type f -exec grep "JAVA_HOME=" {} \;           && \
+#     find /usr/local -type f -exec grep -l "JAVA_HOME=" {} \;  && \
+#     find /etc -type f -exec grep -l "JAVA_HOME=" {} \; && \
+#     find . -type f -exec grep -l jdk1.8.0  {} \;
+# 
+# RUN for a in `echo "/usr/local/hbase-1.1.10/bin/hbase-daemon.sh /usr/local/hbase-1.1.10/conf/hbase-env.sh /usr/local/apache-phoenix-4.9.0-HBase-1.1-bin/bin/config/env.sh /usr/local/zookeeper-3.4.6/src/packages/update-zookeeper-env.sh /usr/local/zookeeper-3.4.6/src/packages/templates/conf/zookeeper-env.sh /usr/local/hadoop-2.7.0/bin/rcc /usr/local/hadoop-2.7.0/bin/yarn /usr/local/hadoop-2.7.0/etc/hadoop/yarn-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/hadoop-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/mapred-env.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/libexec/hadoop-config.sh /etc/start-hbase.sh /etc/do-benchmark.sh"` 
+RUN  cat /usr/local/hbase-1.1.10/bin/hbase-daemon.sh /usr/local/hbase-1.1.10/conf/hbase-env.sh /usr/local/apache-phoenix-4.9.0-HBase-1.1-bin/bin/config/env.sh /usr/local/zookeeper-3.4.6/src/packages/update-zookeeper-env.sh /usr/local/zookeeper-3.4.6/src/packages/templates/conf/zookeeper-env.sh /usr/local/hadoop-2.7.0/bin/rcc /usr/local/hadoop-2.7.0/bin/yarn /usr/local/hadoop-2.7.0/etc/hadoop/yarn-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/hadoop-env.sh /usr/local/hadoop-2.7.0/etc/hadoop/mapred-env.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/kms/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/setclasspath.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/tool-wrapper.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/daemon.sh /usr/local/hadoop-2.7.0/share/hadoop/httpfs/tomcat/bin/catalina.sh /usr/local/hadoop-2.7.0/libexec/hadoop-config.sh /etc/start-hbase.sh /etc/do-benchmark.sh | grep "JAVA_HOME="
 
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
