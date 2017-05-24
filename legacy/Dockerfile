@@ -110,4 +110,6 @@ EXPOSE 2181
 RUN for a in `find /usr/local/hadoop-2.7.0 -type f -exec grep -l "JAVA_HOME=" {} \;` ; do    echo $a ;   grep "JAVA_HOME=" $a ; done
 RUN for a in `find /etc -type f -exec grep -l "JAVA_HOME=" {} \;` ; do    echo $a ;   grep "JAVA_HOME=" $a ; done
 
+ADD CSV/*.csv    /spica/work/
+
 CMD ["/etc/bootstrap-phoenix.sh", "-bash"]
