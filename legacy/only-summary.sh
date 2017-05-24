@@ -39,7 +39,15 @@ function filter {
     if [[ $element == *"hadoop.hdfs.server.datanode.DataNode"* ]]; then
       RESULT="$RESULT $element"
     fi
-
+    if [[ $element == *"phoenix.jdbc.PhoenixDriver"* ]]; then
+      RESULT="$RESULT $element"
+    fi
+    if [[ $element == *"bin/sqlline.py"* ]]; then
+      RESULT="$RESULT $element"
+    fi
+    if [[ $element == *"jsoares"* ]]; then
+      RESULT="$RESULT $element"
+    fi
   done
   if [ "$RESULT." != '.' ]; then
     echo $RESULT
