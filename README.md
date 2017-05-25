@@ -276,6 +276,64 @@ GROUP BY state
 ORDER BY sum(population) DESC;
 ```
 
+## Running on Ubuntu 16.04 64 bits
+
+```bash
+root@spica:/etc# : ${HADOOP_PREFIX:=/usr/local/hadoop}
+root@spica:/etc# : ${ZOO_HOME:=/usr/local/zookeeper}
+root@spica:/etc# : ${HBASE_HOME:=/usr/local/hbase}
+
+root@spica:/etc# $HADOOP_PREFIX/sbin/start-dfs.sh
+Starting namenodes on [spica.eic.cefet-rj.br]
+spica.eic.cefet-rj.br: starting namenode, logging to /usr/local/hadoop/logs/hadoop-root-namenode-spica.out
+200.9.149.138: starting datanode, logging to /usr/local/hadoop/logs/hadoop-root-datanode-spica.out
+Starting secondary namenodes [0.0.0.0]
+0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop/logs/hadoop-root-secondarynamenode-spica.out
+
+root@spica:/etc# $HADOOP_PREFIX/sbin/start-yarn.sh
+starting yarn daemons
+starting resourcemanager, logging to /usr/local/hadoop/logs/yarn-root-resourcemanager-spica.out
+200.9.149.138: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-root-nodemanager-spica.out
+
+root@spica:/etc# $ZOO_HOME/bin/zkServer.sh start
+JMX enabled by default
+Using config: /usr/local/zookeeper/bin/../conf/zoo.cfg
+Starting zookeeper ... STARTED
+
+root@spica:/etc# $HBASE_HOME/bin/hbase version
+2017-05-25 09:22:31,569 INFO  [main] util.VersionInfo: HBase 1.1.10
+2017-05-25 09:22:31,570 INFO  [main] util.VersionInfo: Source code repository git://diocles.local/Volumes/hbase-1.1.10/hbase revision=af9719e45a1ee9f4509607aff7e554119d29e930
+2017-05-25 09:22:31,570 INFO  [main] util.VersionInfo: Compiled by ndimiduk on Tue Apr 18 20:57:55 PDT 2017
+2017-05-25 09:22:31,570 INFO  [main] util.VersionInfo: From source with checksum ca073185cac889588a4de74d92d49b56
+
+root@spica:/etc# $HBASE_HOME/bin/start-hbase.sh
+localhost: starting zookeeper, logging to /usr/local/hbase/bin/../logs/hbase-root-zookeeper-spica.out
+localhost: java.net.BindException: Address already in use
+localhost:  at sun.nio.ch.Net.bind0(Native Method)
+localhost:  at sun.nio.ch.Net.bind(Net.java:433)
+localhost:  at sun.nio.ch.Net.bind(Net.java:425)
+localhost:  at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:223)
+localhost:  at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+localhost:  at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:67)
+localhost:  at org.apache.zookeeper.server.NIOServerCnxnFactory.configure(NIOServerCnxnFactory.java:95)
+localhost:  at org.apache.zookeeper.server.ZooKeeperServerMain.runFromConfig(ZooKeeperServerMain.java:111)
+localhost:  at org.apache.hadoop.hbase.zookeeper.HQuorumPeer.runZKServer(HQuorumPeer.java:94)
+starting master, logging to /usr/local/hbase/logs/hbase-root-master-spica.out
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0
+starting regionserver, logging to /usr/local/hbase/logs/hbase-root-1-regionserver-spica.out
+
+root@spica:/etc# show-hbase-processes.sh 
+sshd|hbase|hadoop|zookeeper|java|phoenix.jdbc.PhoenixDriver|bin/sqlline.py|soares sshd|hbase|hadoop|zookeeper|java|phoenix.jdbc.PhoenixDriver|bin/sqlline.py|soares
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.hadoop.hbase.master.HMaster
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.hadoop.hbase.regionserver.HRegionServer
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.hadoop.hdfs.server.datanode.DataNode
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.hadoop.hdfs.server.namenode.SecondaryNameNode
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.hadoop.yarn.server.nodemanager.NodeManager
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.hadoop.yarn.server.resourcemanager.ResourceManager
+/usr/lib/jvm/java-8-oracle/bin/java org.apache.zookeeper.server.quorum.QuorumPeerMain
+```
+
 ## More About HBase
 
 Why do we need NoSQL?
